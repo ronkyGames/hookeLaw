@@ -41,4 +41,10 @@ local function drawCurl(start)
 end
 
 -- make a curl
-local curl = drawCurl(C)
+local curl
+
+-- make spring
+for i=1,curls do
+  curl = drawCurl(C)
+  C.x = curl.x
+end
