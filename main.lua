@@ -1,8 +1,8 @@
------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 --
 -- main.lua
 --
------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 -- Your code here
 -- Set unit of a meter
@@ -23,13 +23,14 @@ local B = {}
 B.x = 0
 B.y = -meter/2
 local wall = display.newLine( spring, A.x, A.y, B.x, B.y )
+wall.strokeWidth = 8
 local C = {}
-C.x = O.x+meter/2
+C.x = O.x+meter/4
 C.y = O.y
 local springPart = display.newLine( spring, O.x, O.y, C.x, C.y )
 -- the spring
 local precision = 100
-local curls = 5
+local curls = 10
 
 local function drawCurl(start)
   for i = 1, precision do
@@ -48,3 +49,7 @@ for i=1,curls do
   curl = drawCurl(C)
   C.x = curl.x
 end
+-- make hooking
+C.x = C.x + meter/4
+springPart:append(C.x,C.y)
+springPart.strokeWidth = 2
