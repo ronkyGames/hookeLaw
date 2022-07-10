@@ -1,55 +1,60 @@
 --------------------------------------------------------------------------------
 --
--- main.lua
+-- main.lua grid
 --
 --------------------------------------------------------------------------------
-
+-- color palette: https://colorhunt.co/palette/2c36393f4e4fa27b5cdcd7c9
+-- background : rgb(44, 54, 57)
+-- object backGround: rgb(63, 78, 79)
+-- text bold : rgb(162, 123, 92)
+-- text : rgb(220, 215, 201)
 -- Your code here
--- Set unit of a meter
+-- initial settings
+-- hide the status bar
+display.setStatusBar( display.HiddenStatusBar )
+-- set the color of the backGround
+local backGround = {}
+backGround.key = "background"
+backGround.color = {}
+backGround.color.r = 44/255
+backGround.color.g = 54/255
+backGround.color.b = 57/255
+backGround.color.alpha = 1
+display.setDefault( backGround.key, backGround.color.r, backGround.color.g, backGround.color.b, backGround.color.alpha )
+-- set unit of measure
+local measureInMeters = 10
 local minContentMeasure = math.min(display.contentWidth, display.contentHeight)
-local meter = minContentMeasure / 10
--- Draw a spring
-local spring = display.newGroup()
--- set the group origin at the center of the screen
-spring.x = display.contentCenterX
-spring.y = display.contentCenterY
-local O = {}
-O.x = 0
-O.y = 0
-local A = {}
-A.x = 0
-A.y = meter/2
-local B = {}
-B.x = 0
-B.y = -meter/2
-local wall = display.newLine( spring, A.x, A.y, B.x, B.y )
-wall.strokeWidth = 8
-local C = {}
-C.x = O.x+meter/4
-C.y = O.y
-local springPart = display.newLine( spring, O.x, O.y, C.x, C.y )
--- the spring
-local precision = 100
-local curls = 10
+local meter = minContentMeasure / measureInMeters
 
-local function drawCurl(start)
-  for i = 1, precision do
-    B.x = start.x + meter/curls * i / precision
-    B.y = start.y + meter/3 * math.sin(2 * math.pi * i / precision)
-    springPart:append(B.x, B.y)
+local gameArea = display.newGroup()
+gameArea.x = display.contentCenterX
+gameArea.y = display.contentCenterY
+local backGround = display.newRect(gameArea, 0, 0, minContentMeasure, minContentMeasure )
+
+local function gridLine(group, x1,y1,x2,y2, strokeWidth, strokeColor)
+  local principalLine = display.newLine(gameArea, x1, y1, x2, y2)
+  principalLine.strokeWidth = strokeWidth
+  principalLine:setStrokeColor(unpack( strokeColor))
+  local perpendicolarLine = display.newLine(gameArea, -y1, x1, -y2, x2)
+  perpendicolarLine.strokeWidth = strokeWidth
+  perpendicolarLine:setStrokeColor(unpack( strokeColor))
+
+end
+
+local function grid(group,measure, count, unit, strokeWidth, strokeColor)
+  -- vertical lines
+  local A = {}
+  A.x = -measure / 2
+  A.y = -measure / 2
+
+  local B = {}
+  B.x = -measure / 2
+  B.y = measure / 2
+  gridLine(group, A.x,A.y,B.x,B.y, strokeWidth,strokeColor)
+  for i=1,count do
+    A.x = A.x + unit
+    B.x = A.x
+    gridLine(group, A.x,A.y,B.x,B.y, strokeWidth,strokeColor)
   end
-  return B
 end
-
--- make a curl
-local curl
-
--- make spring
-for i=1,curls do
-  curl = drawCurl(C)
-  C.x = curl.x
-end
--- make hooking
-C.x = C.x + meter/4
-springPart:append(C.x,C.y)
-springPart.strokeWidth = 2
+ grid(gameArea,minContentMeasure,measureInMeters,meter,2,{0,1,0,0.5})
