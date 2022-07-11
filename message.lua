@@ -1,26 +1,18 @@
 --------------------------------------------------------------------------------
 --
--- main.lua
+-- message.lua
 --
 --------------------------------------------------------------------------------
 
--- Your code here
--- initial settings
--- hide the status bar
-display.setStatusBar( display.HiddenStatusBar )
+local message = {}
+message.message = "Hello!"
 
-local test = {}
-test.message = "Hello!"
-
-function test:setMessage(message)
+function message:setMessage(message)
   self.message = "Hello World!"
 end
 
-function test:sayMessage()
+function message:sayMessage()
   print(self.message)
 end
 
-test:sayMessage()
-
-test:setMessage("Hello World!")
-test:sayMessage()
+return message
